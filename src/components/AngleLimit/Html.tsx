@@ -1,14 +1,21 @@
-import { CSSProperties, PropsWithChildren, RefAttributes, useMemo } from "react";
+import {
+  CSSProperties,
+  HTMLAttributes,
+  PropsWithChildren,
+  RefAttributes,
+  useMemo,
+} from "react";
 import { AngleLimitProps, useAngleLimit } from "./useAngleLimit";
 import { Html } from "@react-three/drei";
 import { GroupProps } from "@react-three/fiber";
+import { HtmlProps } from "@react-three/drei/web/Html";
 
-export type AngleLimitByHtmlProps = AngleLimitProps &
-  RefAttributes<HTMLDivElement> &
-  GroupProps;
+export type AngleLimitByHtmlProps = AngleLimitProps & HtmlProps;
 
-export function AngleLimitByHtml(props: PropsWithChildren<AngleLimitByHtmlProps>) {
-  const { children, ...config } = props;
+export function AngleLimitByHtml(
+  props: PropsWithChildren<AngleLimitByHtmlProps>
+) {
+  const { children, style, ...config } = props;
   const { isShow } = useAngleLimit(props);
 
   const getStyle = useMemo<CSSProperties>(() => {
@@ -19,7 +26,14 @@ export function AngleLimitByHtml(props: PropsWithChildren<AngleLimitByHtmlProps>
   }, [isShow]);
 
   return (
-    <Html visible={isShow} style={getStyle} {...config}>
+    <Html
+      visible={isShow}
+      style={{
+        ...getStyle,
+        ...style,
+      }}
+      {...config}
+    >
       {children}
     </Html>
   );

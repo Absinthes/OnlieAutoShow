@@ -35,20 +35,20 @@ export function Index() {
     <>
       <Canvas
         camera={{
-          position: [2.786827491251802, 1.8987793633173258, 3.345254768092146],
+          position: [3.5349923362521283, 2.335183880146674, 2.5772356186885763],
         }}
       >
         <Stats />
         <color attach="background" args={[color]} />
         <ambientLight />
         <OrbitControls
-          // enablePan={false}
-          // enableZoom={false}
+          enablePan={false}
+          enableZoom={false}
           makeDefault
           autoRotate
           autoRotateSpeed={1}
           maxPolarAngle={Math.PI / 2}
-          // minPolarAngle={Math.PI / 3}
+          minPolarAngle={Math.PI / 3}
         />
         <Scene />
         {/* <Effect /> */}

@@ -8,7 +8,7 @@ export function Wordbox(
     } & HTMLAttributes<HTMLDivElement>
   >
 ) {
-  const { children, direction = "left", className } = props;
+  const { children, direction = "right", className } = props;
 
   return (
     <div

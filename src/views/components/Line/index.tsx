@@ -6,6 +6,7 @@ import styles from "./index.module.scss";
 import {
   CSSProperties,
   PropsWithChildren,
+  ReactNode,
   RefAttributes,
   useMemo,
 } from "react";
@@ -17,12 +18,13 @@ export type LineProps = {
   width?: number;
   size?: "larger" | "mini";
   show?: boolean;
+  children?: (state: boolean) => ReactNode | undefined;
 } & AngleLimitProps &
-  GroupProps &
+  Omit<GroupProps, "children"> &
   RefAttributes<HTMLDivElement> &
-  HtmlProps;
+  Omit<HtmlProps, "children">;
 
-export function Line(props: PropsWithChildren<LineProps>) {
+export function Line(props: LineProps) {
   const {
     children,
     minHorizontalAngle = -Math.PI * 2,
@@ -89,7 +91,10 @@ export function Line(props: PropsWithChildren<LineProps>) {
           <img className={styles.rightHorizontalLine} src="/image/Line02.png" />
         </Html>
         <Html center className={styles.content} style={getTiggerStyle}>
-          {children}
+          {
+            // @ts-ignore
+            children(show && isShow)
+          }
         </Html>
       </group>
     );

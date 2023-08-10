@@ -2,6 +2,7 @@ import { useControls } from "leva";
 import { Line } from "./components/Line";
 import { useCarCtx } from "@/context/car";
 import { CountUp } from "@/components/CountUp";
+import { ReactNode } from "react";
 
 export function Lines() {
   const { state } = useCarCtx();
@@ -17,10 +18,21 @@ export function Lines() {
         minVerticalAngle={Math.PI / 5}
         maxVerticalAngle={Math.PI / 2}
       >
-        <div className="text-2xl text-light pingfang">
-          <CountUp endVal={4500} />
-          <span>mm</span>
-        </div>
+        {(state) => {
+          if (!state) return;
+          return (
+            <div className="text-2xl text-light pingfang">
+              <CountUp
+                startVal={1000}
+                endVal={4500}
+                options={{
+                  duration: 1,
+                }}
+              />
+              <span>mm</span>
+            </div>
+          ) as ReactNode;
+        }}
       </Line>
 
       <Line
@@ -34,10 +46,21 @@ export function Lines() {
         minVerticalAngle={Math.PI / 5}
         maxVerticalAngle={Math.PI / 2}
       >
-        <div className="text-xl text-light pingfang">
-          <CountUp startVal={100} endVal={1000} />
-          <span>mm</span>
-        </div>
+        {(state) => {
+          if (!state) return;
+          return (
+            <div className="text-xl text-light pingfang">
+              <CountUp
+                startVal={100}
+                endVal={860}
+                options={{
+                  duration: 1,
+                }}
+              />
+              <span>mm</span>
+            </div>
+          );
+        }}
       </Line>
     </>
   );
