@@ -12,6 +12,7 @@ import { useGLTF, useAnimations, Center } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { Group, LoopOnce } from "three";
 import { useCarCtx } from "@/context/car";
+import { applyProps } from "@react-three/fiber";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -167,6 +168,8 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
     state: { carDoorOpen: carDoorStatus },
     dispatch,
   } = useCarCtx();
+
+  applyProps(materials["LIGT_BLC"], { emissive: "#fff" });
 
   useEffect(() => {
     const action = actions["Animation"]!;

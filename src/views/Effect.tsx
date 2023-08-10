@@ -10,7 +10,7 @@ export function Effect() {
     <EffectComposer>
       {/* <SSR /> */}
       <Bloom
-        luminanceThreshold={0.2}
+        luminanceThreshold={1}
         mipmapBlur
         luminanceSmoothing={0}
         intensity={1.75}
