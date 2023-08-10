@@ -14,8 +14,13 @@ export function Wordbox(
     <div
       className={`${styles["label-box"]} ${
         direction == "left" ? styles.left : styles.right
-      } ${className}`}
+      } ${className}  `}
     >
+      <div
+        className={`${styles.sign} ${
+          direction == "left" ? styles.left : styles.right
+        }`}
+      ></div>
       {children}
     </div>
   );

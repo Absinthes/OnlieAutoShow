@@ -11,6 +11,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useGLTF, useAnimations, Center } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { Group, LoopOnce } from "three";
+import { useCarCtx } from "@/context/car";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -162,13 +163,16 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
 
   const { actions } = useAnimations(animations, group);
 
+  const {
+    state: { carDoorOpen: carDoorStatus },
+    dispatch,
+  } = useCarCtx();
+
   useEffect(() => {
     const action = actions["Animation"]!;
     action.setLoop(LoopOnce, 1);
     action.clampWhenFinished = true;
   });
-
-  const [carDoorStatus, setCarDoorStatus] = useState(false);
 
   function handlerCarDoorClick() {
     if (carDoorStatus) carDoorClose();
@@ -176,7 +180,7 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
   }
 
   function carDoorOpen() {
-    setCarDoorStatus(true);
+    dispatch({ type: "open", payload: true });
     const action = actions["Animation"]!;
     action.time = 2;
     action.timeScale = 1;
@@ -185,12 +189,20 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
   }
 
   function carDoorClose() {
-    setCarDoorStatus(false);
     const action = actions["Animation"]!;
     action.time = 4;
     action.timeScale = -1;
     action.paused = false;
     action.play();
+
+    const mixer = action.getMixer();
+
+    const handlerFinished = () => {
+      dispatch({ type: "open", payload: false });
+      mixer.removeEventListener("finished", handlerFinished);
+    };
+
+    mixer.addEventListener("finished", handlerFinished);
   }
 
   return (
@@ -206,7 +218,11 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
                 scale={0.121}
                 onClick={handlerCarDoorClick}
               >
-                <group name="CR001_12" position={[-7.573, -15.296, -7.41]} scale={8.299}>
+                <group
+                  name="CR001_12"
+                  position={[-7.573, -15.296, -7.41]}
+                  scale={8.299}
+                >
                   <mesh
                     name="Object_64"
                     geometry={nodes.Object_64.geometry}
@@ -223,7 +239,11 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
                     material={materials.material_32}
                   />
                 </group>
-                <group name="KLM001_13" position={[-7.573, -5.694, -7.41]} scale={8.299}>
+                <group
+                  name="KLM001_13"
+                  position={[-7.573, -5.694, -7.41]}
+                  scale={8.299}
+                >
                   <mesh
                     name="Object_68"
                     geometry={nodes.Object_68.geometry}
@@ -262,8 +282,17 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
                   />
                 </group>
               </group>
-              <group name="Empty002_20" position={[-0.841, 0.696, 0.869]} scale={0.15}>
-                <group name="CR002_17" position={[5.623, -4.656, -5.815]} scale={6.689}>
+              <group
+                name="Empty002_20"
+                position={[-0.841, 0.696, 0.869]}
+                scale={0.15}
+                onClick={handlerCarDoorClick}
+              >
+                <group
+                  name="CR002_17"
+                  position={[5.623, -4.656, -5.815]}
+                  scale={6.689}
+                >
                   <mesh
                     name="Object_77"
                     geometry={nodes.Object_77.geometry}
@@ -280,7 +309,11 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
                     material={materials.material_32}
                   />
                 </group>
-                <group name="KLM003_18" position={[5.623, -4.656, -5.815]} scale={6.689}>
+                <group
+                  name="KLM003_18"
+                  position={[5.623, -4.656, -5.815]}
+                  scale={6.689}
+                >
                   <mesh
                     name="Object_81"
                     geometry={nodes.Object_81.geometry}
@@ -459,7 +492,11 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
                     material={materials.LOGO}
                   />
                 </group>
-                <group name="Interior_6" position={[0, -2.502, 0]} scale={1.953}>
+                <group
+                  name="Interior_6"
+                  position={[0, -2.502, 0]}
+                  scale={1.953}
+                >
                   <mesh
                     name="Object_31"
                     geometry={nodes.Object_31.geometry}

@@ -1,0 +1,100 @@
+.lineBox {
+  --width: 600;
+  --widthPx: 600px;
+  position: relative;
+  user-select: none;
+  pointer-events: none;
+
+  &.show {
+    .leftLine {
+      animation: borderWidth 1.5s;
+    }
+    .leftHorizontalLine {
+      animation: HorizontalWidth 1s;
+    }
+
+    .rightHorizontalLine {
+      animation: HorizontalWidth 1s;
+    }
+  }
+
+  &.mini {
+    .leftLine {
+      flex: 1;
+      border-image: url("/image/Line03.png") 0 var(--width) 0 50;
+    }
+    .content {
+      width: 0px;
+    }
+  }
+
+  .lineWarp {
+    flex: 1 0;
+    width: var(--widthPx);
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+  .leftLine {
+    width: 0;
+    height: 64px;
+    border-left: 50px solid transparent;
+    border-right: var(--widthPx) solid transparent;
+    border-top: 0 solid transparent;
+    border-bottom: 0 solid transparent;
+    border-image: url("/image/Line01.png") 0 var(--width) 0 50;
+
+    @keyframes borderWidth {
+      from {
+        border-right-width: 0px;
+      }
+      to {
+        border-right-width: var(--widthPx);
+      }
+    }
+  }
+
+  .content {
+    width: 200px;
+    color: white;
+  }
+
+  .rightLine {
+    transform: rotate(180deg);
+  }
+
+  .leftHorizontalLine {
+    position: absolute;
+    left: 0;
+    width: 300px;
+    height: 4px;
+    transform-origin: left;
+    transform: rotate(-90deg) translateX(-40px);
+  }
+
+  .rightHorizontalLine {
+    position: absolute;
+    right: 0;
+    width: 300px;
+    height: 4px;
+    transform-origin: right;
+    transform: rotate(-90deg) translateX(calc(100% - 40px));
+  }
+
+  @keyframes HorizontalWidth {
+    from {
+      width: 0;
+    }
+    to {
+      width: 300px;
+    }
+  }
+}
+
+.content {
+  color: white;
+  user-select: none;
+  pointer-events: none;
+  .show {
+  }
+}

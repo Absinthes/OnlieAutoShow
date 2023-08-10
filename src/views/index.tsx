@@ -4,6 +4,7 @@ import {
   ContactShadows,
   Environment,
   Float,
+  Html,
   Lightformer,
   OrbitControls,
   RandomizedLight,
@@ -19,6 +20,12 @@ import { Effect } from "./Effect";
 import { useControls } from "leva";
 import { Pedestal } from "./Pedestal";
 import { PerformancePlane } from "@/components/PerformancePlane";
+import { AngleLimit } from "@/components/AngleLimit";
+import { Wordbox } from "@/components/Wordbox";
+import { AngleLimitByHtml } from "@/components/AngleLimit/Html";
+import { Line } from "./components/Line";
+import { Lines } from "./Lines";
+import { Labels } from "./Label";
 
 export function Index() {
   const { color } = useControls({
@@ -27,18 +34,21 @@ export function Index() {
   return (
     <>
       <Canvas
-        camera={{ position: [2.921580967480724, 2.334820661254201, 3.3185805896851415] }}
+        camera={{
+          position: [2.786827491251802, 1.8987793633173258, 3.345254768092146],
+        }}
       >
         <Stats />
         <color attach="background" args={[color]} />
         <ambientLight />
         <OrbitControls
-          enablePan={false}
+          // enablePan={false}
+          // enableZoom={false}
           makeDefault
           autoRotate
-          autoRotateSpeed={0.5}
+          autoRotateSpeed={1}
           maxPolarAngle={Math.PI / 2}
-          minPolarAngle={Math.PI / 3}
+          // minPolarAngle={Math.PI / 3}
         />
         <Scene />
         {/* <Effect /> */}
@@ -66,6 +76,8 @@ function Scene() {
       <Center top>
         <Car />
       </Center>
+      <Lines />
+      <Labels />
     </>
   );
 }

@@ -1,5 +1,24 @@
 .label-box {
+  position: relative;
   color: white;
+  white-space: nowrap;
+
+  .sign {
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background-color: rgb(202, 202, 202);
+    transform: translate(0, calc(-50% - 4px));
+  }
+  .left {
+    left: -87px;
+  }
+  .right {
+    right: -87px;
+  }
+
   &.right {
     border-right: 87px solid transparent;
     border-left: 23px solid transparent;
