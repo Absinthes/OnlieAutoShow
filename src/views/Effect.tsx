@@ -15,7 +15,6 @@ export function Effect() {
         luminanceSmoothing={0}
         intensity={1.75}
       />
-      <LUT lut={texture} />
     </EffectComposer>
   );
 }

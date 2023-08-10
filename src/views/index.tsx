@@ -1,10 +1,14 @@
 import {
+  AccumulativeShadows,
+  Center,
   ContactShadows,
   Environment,
   Float,
   Lightformer,
   OrbitControls,
+  RandomizedLight,
   Stats,
+  useTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Car } from "./Car";
@@ -12,17 +16,33 @@ import { Depth } from "@react-three/postprocessing";
 import { useRef } from "react";
 import { BackSide, Color } from "three";
 import { Effect } from "./Effect";
+import { useControls } from "leva";
+import { Pedestal } from "./Pedestal";
+import { PerformancePlane } from "@/components/PerformancePlane";
 
 export function Index() {
+  const { color } = useControls({
+    color: "#323334",
+  });
   return (
     <>
-      <Canvas>
+      <Canvas
+        camera={{ position: [2.921580967480724, 2.334820661254201, 3.3185805896851415] }}
+      >
         <Stats />
-        <color attach="background" args={["#15151a"]} />
+        <color attach="background" args={[color]} />
         <ambientLight />
-        <OrbitControls />
+        <OrbitControls
+          enablePan={false}
+          makeDefault
+          autoRotate
+          autoRotateSpeed={0.5}
+          maxPolarAngle={Math.PI / 2}
+          minPolarAngle={Math.PI / 3}
+        />
         <Scene />
-        <Effect />
+        {/* <Effect /> */}
+        <PerformancePlane />
       </Canvas>
     </>
   );
@@ -31,33 +51,47 @@ export function Index() {
 function Scene() {
   return (
     <>
-      <mesh
-        scale={1}
-        position={[3, -1.161, -1.5]}
-        rotation={[-Math.PI / 2, 0, Math.PI / 2.5]}
-      >
-        <ringGeometry args={[0.9, 1, 4, 1]} />
-        <meshStandardMaterial color="white" roughness={0.75} />
-      </mesh>
-      <mesh
-        scale={1}
-        position={[-3, -1.161, -1]}
-        rotation={[-Math.PI / 2, 0, Math.PI / 2.5]}
-      >
-        <ringGeometry args={[0.9, 1, 3, 1]} />
-        <meshStandardMaterial color="white" roughness={0.75} />
-      </mesh>
       <ContactShadows
         resolution={1024}
         frames={1}
-        position={[0, -1.16, 0]}
         scale={15}
         blur={0.5}
-        opacity={1}
+        opacity={0.5}
         far={20}
       />
       <Lightformers />
-      <Car />
+      <spotLight angle={1} position={[-80, 200, -100]} intensity={1} />
+      <Env />
+      <Pedestal />
+      <Center top>
+        <Car />
+      </Center>
+    </>
+  );
+}
+
+function Env() {
+  const texture = useTexture("/image/Scene_1108.jpg");
+
+  // const { position1, position2 } = useControls({
+  //   position1: { value: [0, 0.1, 0], step: 0.1 },
+  //   position2: { value: [0, 0.1, 0], step: 0.1 },
+  // });
+
+  return (
+    <>
+      {/* <mesh scale={3} position={position1} rotation={[-Math.PI / 2, 0, Math.PI / 2.5]}>
+        <ringGeometry args={[0.9, 1, 4, 1]} />
+        <meshStandardMaterial color="white" roughness={0.75} />
+      </mesh>
+      <mesh scale={3} position={position2} rotation={[-Math.PI / 2, 0, Math.PI / 2.5]}>
+        <ringGeometry args={[0.9, 1, 3, 1]} />
+        <meshStandardMaterial color="white" roughness={0.75} />
+      </mesh> */}
+      <mesh position={[0, 4, 0]}>
+        <sphereGeometry args={[15, 32, 32]} />
+        <meshStandardMaterial map={texture} side={BackSide} />
+      </mesh>
     </>
   );
 }

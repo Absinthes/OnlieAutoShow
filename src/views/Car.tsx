@@ -7,10 +7,10 @@ Source: https://sketchfab.com/3d-models/lamborghini-centenario-lp-770-baby-blue-
 Title: Lamborghini Centenario LP-770 Baby Blue SDC
 */
 
-import * as THREE from "three";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useGLTF, useAnimations, Center } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
+import { Group, LoopOnce } from "three";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -155,15 +155,46 @@ type GLTFResult = GLTF & {
 };
 
 export function Car(props: JSX.IntrinsicElements["group"]) {
-  const group = useRef<THREE.Group>();
+  const group = useRef<Group>();
   const { nodes, materials, animations } = useGLTF(
     "/models/lamborghini_centenario_lp-770_baby_blue_sdc.glb"
   ) as GLTFResult;
 
   const { actions } = useAnimations(animations, group);
 
+  useEffect(() => {
+    const action = actions["Animation"]!;
+    action.setLoop(LoopOnce, 1);
+    action.clampWhenFinished = true;
+  });
+
+  const [carDoorStatus, setCarDoorStatus] = useState(false);
+
+  function handlerCarDoorClick() {
+    if (carDoorStatus) carDoorClose();
+    else carDoorOpen();
+  }
+
+  function carDoorOpen() {
+    setCarDoorStatus(true);
+    const action = actions["Animation"]!;
+    action.time = 2;
+    action.timeScale = 1;
+    action.paused = false;
+    action.play();
+  }
+
+  function carDoorClose() {
+    setCarDoorStatus(false);
+    const action = actions["Animation"]!;
+    action.time = 4;
+    action.timeScale = -1;
+    action.paused = false;
+    action.play();
+  }
+
   return (
-    <Center bottom ref={group} {...props}>
+    <group ref={group} {...props}>
       <group name="Sketchfab_Scene">
         <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
           <group name="root">
@@ -173,6 +204,7 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
                 position={[0.913, 0.686, 0.893]}
                 rotation={[-0.004, 0, 0]}
                 scale={0.121}
+                onClick={handlerCarDoorClick}
               >
                 <group name="CR001_12" position={[-7.573, -15.296, -7.41]} scale={8.299}>
                   <mesh
@@ -703,7 +735,7 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
           </group>
         </group>
       </group>
-    </Center>
+    </group>
   );
 }
 

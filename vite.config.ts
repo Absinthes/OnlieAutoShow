@@ -11,4 +11,10 @@ export default defineConfig({
       configFile: resolve(__dirname, "uno.config.ts"),
     }),
   ],
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "src"),
+      "~/": resolve(__dirname, "src"),
+    },
+  },
 });
