@@ -15,9 +15,9 @@ export type CountUpProps = {
 
 export function CountUp(props: PropsWithChildren<CountUpProps>) {
   const spanRef = createRef<HTMLDivElement>();
+  const { startVal = 0, endVal, options, ...rest } = props;
 
   useEffect(() => {
-    const { startVal = 0, endVal, options } = props;
     const countUpAnim = new _CountUp(spanRef.current!, endVal, {
       startVal,
       ...options,
@@ -29,5 +29,5 @@ export function CountUp(props: PropsWithChildren<CountUpProps>) {
     }
   });
 
-  return <span ref={spanRef} {...props}></span>;
+  return <span ref={spanRef} {...rest}></span>;
 }

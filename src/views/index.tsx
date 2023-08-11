@@ -26,6 +26,7 @@ import { AngleLimitByHtml } from "@/components/AngleLimit/Html";
 import { Line } from "./components/Line";
 import { Lines } from "./Lines";
 import { Labels } from "./Label";
+import { Picker } from "./components/Picker";
 
 export function Index() {
   const { color } = useControls({
@@ -54,6 +55,7 @@ export function Index() {
         {/* <Effect /> */}
         <PerformancePlane />
       </Canvas>
+      <Picker />
     </>
   );
 }

@@ -18,8 +18,8 @@ export function Lines() {
         minVerticalAngle={Math.PI / 5}
         maxVerticalAngle={Math.PI / 2}
       >
-        {(state) => {
-          if (!state) return;
+        {(show) => {
+          if (!show) return;
           return (
             <div className="text-2xl text-light pingfang">
               <CountUp
@@ -46,8 +46,8 @@ export function Lines() {
         minVerticalAngle={Math.PI / 5}
         maxVerticalAngle={Math.PI / 2}
       >
-        {(state) => {
-          if (!state) return;
+        {(show) => {
+          if (!show) return;
           return (
             <div className="text-xl text-light pingfang">
               <CountUp

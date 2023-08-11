@@ -30,8 +30,8 @@ export function Labels() {
       direction: "left",
       content: "智能语音交互系统",
       position: [0, 0.8, 0.7],
-      minHorizontalAngle: Math.PI * 0.2,
-      maxHorizontalAngle: Math.PI * 0.6,
+      minHorizontalAngle: -Math.PI * 0.2,
+      maxHorizontalAngle: Math.PI * 0.2,
       minVerticalAngle: Math.PI / 5,
       maxVerticalAngle: Math.PI / 2,
     },
@@ -86,13 +86,11 @@ export function Labels() {
     };
 
     return (
-      <>
-        <group position={pos} key={idx}>
-          <AngleLimitByHtml style={style} {...rest}>
-            <Wordbox direction={direction}>{content}</Wordbox>
-          </AngleLimitByHtml>
-        </group>
-      </>
+      <group position={pos} key={idx}>
+        <AngleLimitByHtml style={style} {...rest}>
+          <Wordbox direction={direction}>{content}</Wordbox>
+        </AngleLimitByHtml>
+      </group>
     );
   });
 
