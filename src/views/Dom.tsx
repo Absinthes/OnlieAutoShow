@@ -1,6 +1,7 @@
 import { Wordbox } from "@/components/Wordbox";
 import { Line } from "./components/Line";
 import { Sign } from "@/components/Sign";
+import { MButton } from "./components/MButton";
 
 export function Dom() {
   return (
@@ -9,6 +10,7 @@ export function Dom() {
         {/* <Wordbox direction="right">测试数据</Wordbox> */}
         {/* <Line width={700} /> */}
         {/* <Sign /> */}
+        <MButton />
       </div>
     </>
   );

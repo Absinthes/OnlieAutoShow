@@ -1,16 +1,17 @@
 import { useSnapshot } from "valtio";
 import { HexColorPicker } from "react-colorful";
-import { colorState } from "../contact";
+import { colorState } from "../../contact";
+import style from "./index.module.css";
 
 export function Picker() {
   const snap = useSnapshot(colorState);
   return (
     <div
-      className="picker absolute "
+      className={style.picker}
       style={{
         display: snap.current ? "block" : "none",
-        left: colorState.pickerPosition.left + "px",
-        top: colorState.pickerPosition.top + "px",
+        // left: colorState.pickerPosition.left + "px",
+        // top: colorState.pickerPosition.top + "px",
       }}
     >
       <HexColorPicker

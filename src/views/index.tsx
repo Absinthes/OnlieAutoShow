@@ -52,7 +52,7 @@ export function Index() {
           minPolarAngle={Math.PI / 3}
         />
         <Scene />
-        {/* <Effect /> */}
+        <Effect />
         <PerformancePlane />
       </Canvas>
       <Picker />
@@ -79,7 +79,7 @@ function Scene() {
         <Car />
       </Center>
       <Lines />
-      <Labels />
+      {/* <Labels /> */}
     </>
   );
 }

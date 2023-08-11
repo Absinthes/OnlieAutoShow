@@ -7,7 +7,7 @@ Source: https://sketchfab.com/3d-models/lamborghini-centenario-lp-770-baby-blue-
 Title: Lamborghini Centenario LP-770 Baby Blue SDC
 */
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useGLTF, useAnimations, Center, useCursor } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { Group, LoopOnce } from "three";
@@ -16,8 +16,8 @@ import { ThreeEvent, applyProps } from "@react-three/fiber";
 import { colorState } from "./contact";
 import { useSnapshot } from "valtio";
 import { Sign } from "@/components/Sign";
-import { AngleLimit } from "@/components/AngleLimit";
 import { AngleLimitByHtml } from "@/components/AngleLimit/Html";
+import { throttle } from "lodash-es";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -168,26 +168,47 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
   ) as GLTFResult;
 
   const { actions } = useAnimations(animations, group);
+
   const snap = useSnapshot(colorState);
-  const [hovered, setHover] = useState(null);
+
+  const {
+    state: { carDoorOpen: carDoorStatus },
+    dispatch,
+  } = useCarCtx();
 
   // @ts-ignore
+  applyProps(materials["LIGT_BLC"], { emissive: "#fff" });
+  // @ts-ignore
+  applyProps(materials["LIGT_RED"], { emissive: "#f00" });
+
   useEffect(() => {
+    const action = actions["Animation"]!;
+    action.setLoop(LoopOnce, 1);
+    action.clampWhenFinished = true;
+  });
+
+  const handlerPointerOver = throttle((e: ThreeEvent<PointerEvent>) => {
+    // @ts-ignore
+    // e.stopPropagation();
+
     if (!colorState.state) {
       document.body.style.cursor = "auto";
       return;
     }
+    // @ts-ignore
+    const name = e.object?.material.name;
+
     const cursor = `<svg width="64" height="64" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clip-path="url(#clip0)">
       <path fill="rgba(255, 255, 255, 0.5)"
         d="M29.5 54C43.031 54 54 43.031 54 29.5S43.031 5 29.5 5 5 15.969 5 29.5 15.969 54 29.5 54z" stroke="#fff" />
       <g filter="url(#filter0_d)">
         <path d="M29.5 47C39.165 47 47 39.165 47 29.5S39.165 12 29.5 12 12 19.835 12 29.5 19.835 47 29.5 47z"
-          fill="${snap.items[hovered]}" />
+          fill="${snap.items[name]}" />
       </g>
       <path d="M2 2l11 2.947L4.947 13 2 2z" fill="#fff" /><text fill="#fff" style="#fff-space:pre"
         font-family="Inter var, sans-serif" font-size="10" letter-spacing="-.01em">
-        <tspan x="35" y="63">${hovered}</tspan>
+        <tspan x="35" y="63">${name}</tspan>
       </text>
     </g>
     <defs>
@@ -205,32 +226,21 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
         <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
       </filter>
     </defs>
-  </svg>`;
+    </svg>`;
     const auto = `<svg width="64" height="64" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fill="rgba(255, 255, 255, 0.5)"
       d="M29.5 54C43.031 54 54 43.031 54 29.5S43.031 5 29.5 5 5 15.969 5 29.5 15.969 54 29.5 54z" stroke="#fff" />
     <path d="M2 2l11 2.947L4.947 13 2 2z" fill="#fff" />
-  </svg>`;
-    if (hovered) {
-      document.body.style.cursor = `url('data:image/svg+xml;base64,${btoa(
-        cursor
-      )}'), auto`;
-      return () => (document.body.style.cursor = "auto");
-    }
-  }, [hovered]);
+    </svg>`;
 
-  const {
-    state: { carDoorOpen: carDoorStatus },
-    dispatch,
-  } = useCarCtx();
+    document.body.style.cursor = `url('data:image/svg+xml;base64,${btoa(
+      cursor
+    )}'), auto`;
+  }, 500);
 
-  applyProps(materials["LIGT_BLC"], { emissive: "#fff" });
-
-  useEffect(() => {
-    const action = actions["Animation"]!;
-    action.setLoop(LoopOnce, 1);
-    action.clampWhenFinished = true;
-  });
+  const handlerPointerOut = throttle((e: ThreeEvent<PointerEvent>) => {
+    e.intersections.length === 0 && (document.body.style.cursor = "auto");
+  }, 500);
 
   function handlerCarDoorClick() {
     if (carDoorStatus) carDoorClose();
@@ -280,12 +290,6 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
         name="Sketchfab_model"
         rotation={[-Math.PI / 2, 0, 0]}
         {...props}
-        onPointerOver={(e) => (
-          e.stopPropagation(), setHover(e.object?.material.name)
-        )}
-        onPointerOut={(e) => e.intersections.length === 0 && setHover(null)}
-        onPointerMissed={() => (colorState.current = "")}
-        onClick={handlerCarMaterialClick}
       >
         <group name="GLTF_SceneRootNode" rotation={[Math.PI / 2, 0, 0]}>
           <group
@@ -803,6 +807,10 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
               geometry={nodes.Object_103.geometry}
               material={materials["Material.020"]}
               material-color={snap.items["Material.020"]}
+              onPointerOver={handlerPointerOver}
+              onPointerOut={handlerPointerOut}
+              onPointerMissed={() => (colorState.current = "")}
+              onClick={handlerCarMaterialClick}
             />
             <mesh
               name="Object_104"
@@ -848,12 +856,14 @@ export function Car(props: JSX.IntrinsicElements["group"]) {
         </group>
       </group>
 
-      <CarDoorSign />
+      <CarDoorSign onClick={handlerCarDoorClick} />
     </>
   );
 }
 
-function CarDoorSign() {
+const CarDoorSign = memo((props: { onClick?: (...props: any) => void }) => {
+  const { state } = useCarCtx();
+
   return (
     <>
       <AngleLimitByHtml
@@ -864,7 +874,13 @@ function CarDoorSign() {
         minVerticalAngle={Math.PI / 5}
         maxVerticalAngle={Math.PI / 2}
       >
-        <Sign />
+        <Sign
+          color="#fff"
+          onClick={props?.onClick}
+          style={{
+            display: state.carDoorOpen ? "none" : "flex",
+          }}
+        />
       </AngleLimitByHtml>
 
       <AngleLimitByHtml
@@ -875,10 +891,16 @@ function CarDoorSign() {
         minVerticalAngle={Math.PI / 5}
         maxVerticalAngle={Math.PI / 2}
       >
-        <Sign />
+        <Sign
+          color="#fff"
+          onClick={props?.onClick}
+          style={{
+            display: state.carDoorOpen ? "none" : "flex",
+          }}
+        />
       </AngleLimitByHtml>
     </>
   );
-}
+});
 
 useGLTF.preload("/models/lamborghini_centenario_lp-770_baby_blue_sdc.glb");

@@ -4,8 +4,8 @@ import { Index } from "./views/index";
 function App() {
   return (
     <>
-      {/* <Dom /> */}
-      <Index />
+      <Dom />
+      {/* <Index /> */}
     </>
   );
 }
